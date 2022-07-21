@@ -99,8 +99,8 @@ int DCMotor(void)
 
 	PORTB = 0x00;
   96:	15 b8       	out	0x05, r1	; 5
-	PORTD = 0xC0;
-  98:	80 ec       	ldi	r24, 0xC0	; 192
+	PORTD = 0xE0;
+  98:	80 ee       	ldi	r24, 0xE0	; 224
   9a:	8b b9       	out	0x0b, r24	; 11
 	
 	while(1)
@@ -109,8 +109,8 @@ int DCMotor(void)
   9c:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <DC_MOTOR>
   a0:	85 b9       	out	0x05, r24	; 5
 		
-		if((PIND & 0x40) == 0x00 && state == 0)
-  a2:	4e 99       	sbic	0x09, 6	; 9
+		if((PIND & 0x20) == 0x00 && state == 0)  // 정회전
+  a2:	4d 99       	sbic	0x09, 5	; 9
   a4:	0a c0       	rjmp	.+20     	; 0xba <DCMotor+0x2a>
   a6:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
   aa:	81 11       	cpse	r24, r1
@@ -123,7 +123,7 @@ int DCMotor(void)
   b4:	81 e0       	ldi	r24, 0x01	; 1
   b6:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
 		}
-		if((PIND & 0x40) == 0x00 && state == 1)
+		if((PIND & 0x40) == 0x00 && state == 1)  // 역회전
   ba:	4e 99       	sbic	0x09, 6	; 9
   bc:	09 c0       	rjmp	.+18     	; 0xd0 <DCMotor+0x40>
   be:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
@@ -136,7 +136,7 @@ int DCMotor(void)
 			state = 0;
   cc:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
 		}
-		if((PIND & 0x80) == 0x00)
+		if((PIND & 0x80) == 0x00)                // 정지
   d0:	4f 99       	sbic	0x09, 7	; 9
   d2:	e4 cf       	rjmp	.-56     	; 0x9c <DCMotor+0xc>
 		{
