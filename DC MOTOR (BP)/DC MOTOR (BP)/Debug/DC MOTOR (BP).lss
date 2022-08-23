@@ -3,29 +3,29 @@ DC MOTOR (BP).elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  0000017e  2**0
+  0 .data         00000000  00800100  00800100  00000184  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         0000010a  00000000  00000000  00000074  2**1
+  1 .text         00000110  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000002  00800100  00800100  0000017e  2**0
+  2 .bss          00000001  00800100  00800100  00000184  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  0000017e  2**0
+  3 .comment      00000030  00000000  00000000  00000184  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000001b0  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000001b4  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000028  00000000  00000000  000001f0  2**0
+  5 .debug_aranges 00000028  00000000  00000000  000001f4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000006d0  00000000  00000000  00000218  2**0
+  6 .debug_info   000006c9  00000000  00000000  0000021c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000633  00000000  00000000  000008e8  2**0
+  7 .debug_abbrev 00000633  00000000  00000000  000008e5  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000269  00000000  00000000  00000f1b  2**0
+  8 .debug_line   00000257  00000000  00000000  00000f18  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000034  00000000  00000000  00001184  2**2
+  9 .debug_frame  00000034  00000000  00000000  00001170  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000369  00000000  00000000  000011b8  2**0
+ 10 .debug_str    00000367  00000000  00000000  000011a4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000018  00000000  00000000  00001521  2**0
+ 11 .debug_ranges 00000018  00000000  00000000  0000150b  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -76,11 +76,11 @@ Disassembly of section .text:
   7c:	1d 92       	st	X+, r1
 
 0000007e <.do_clear_bss_start>:
-  7e:	a2 30       	cpi	r26, 0x02	; 2
+  7e:	a1 30       	cpi	r26, 0x01	; 1
   80:	b2 07       	cpc	r27, r18
   82:	e1 f7       	brne	.-8      	; 0x7c <.do_clear_bss_loop>
-  84:	0e 94 81 00 	call	0x102	; 0x102 <main>
-  88:	0c 94 83 00 	jmp	0x106	; 0x106 <_exit>
+  84:	0e 94 84 00 	call	0x108	; 0x108 <main>
+  88:	0c 94 86 00 	jmp	0x10c	; 0x10c <_exit>
 
 0000008c <__bad_interrupt>:
   8c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -94,97 +94,96 @@ int DCMotor(void)
 	DDRB = 0xFF;
   90:	8f ef       	ldi	r24, 0xFF	; 255
   92:	84 b9       	out	0x04, r24	; 4
-	DDRD = 0xFF;
-  94:	8a b9       	out	0x0a, r24	; 10
+	DDRD = 0x00;
+  94:	1a b8       	out	0x0a, r1	; 10
 
 	PORTB = 0x00;
   96:	15 b8       	out	0x05, r1	; 5
-	PORTD = 0x00;
-  98:	1b b8       	out	0x0b, r1	; 11
+	PORTD = 0xE0;
+  98:	80 ee       	ldi	r24, 0xE0	; 224
+  9a:	8b b9       	out	0x0b, r24	; 11
 	
-	TCCR2A |= (1 << WGM21) | (1 << WGM20);
-  9a:	e0 eb       	ldi	r30, 0xB0	; 176
-  9c:	f0 e0       	ldi	r31, 0x00	; 0
-  9e:	80 81       	ld	r24, Z
-  a0:	83 60       	ori	r24, 0x03	; 3
-  a2:	80 83       	st	Z, r24
-	TCCR2A |= (1 << COM2A1) | (1 << COM2B1);
-  a4:	80 81       	ld	r24, Z
-  a6:	80 6a       	ori	r24, 0xA0	; 160
-  a8:	80 83       	st	Z, r24
-	TCCR2B |= (1 << CS22);
-  aa:	e1 eb       	ldi	r30, 0xB1	; 177
-  ac:	f0 e0       	ldi	r31, 0x00	; 0
-  ae:	80 81       	ld	r24, Z
-  b0:	84 60       	ori	r24, 0x04	; 4
-  b2:	80 83       	st	Z, r24
-	DDRB |= (1 << PINB3);
-  b4:	84 b1       	in	r24, 0x04	; 4
-  b6:	88 60       	ori	r24, 0x08	; 8
-  b8:	84 b9       	out	0x04, r24	; 4
-	DDRD |= (1 << PIND3);
-  ba:	8a b1       	in	r24, 0x0a	; 10
-  bc:	88 60       	ori	r24, 0x08	; 8
-  be:	8a b9       	out	0x0a, r24	; 10
+	TCCR1A |= (1 << WGM11) | (1 << WGM10);
+  9c:	e0 e8       	ldi	r30, 0x80	; 128
+  9e:	f0 e0       	ldi	r31, 0x00	; 0
+  a0:	80 81       	ld	r24, Z
+  a2:	83 60       	ori	r24, 0x03	; 3
+  a4:	80 83       	st	Z, r24
+	TCCR1A |= (1 << COM1A1) | (1 << COM1B1);
+  a6:	80 81       	ld	r24, Z
+  a8:	80 6a       	ori	r24, 0xA0	; 160
+  aa:	80 83       	st	Z, r24
+	TCCR1B |= (1 << CS21);
+  ac:	e1 e8       	ldi	r30, 0x81	; 129
+  ae:	f0 e0       	ldi	r31, 0x00	; 0
+  b0:	80 81       	ld	r24, Z
+  b2:	82 60       	ori	r24, 0x02	; 2
+  b4:	80 83       	st	Z, r24
+	
+	DDRB |= (1 << PINB0) | (1 << PINB1) | (1 << PINB2);
+  b6:	84 b1       	in	r24, 0x04	; 4
+  b8:	87 60       	ori	r24, 0x07	; 7
+  ba:	84 b9       	out	0x04, r24	; 4
 	
 	while(1)
 	{
-		PORTB = DC_MOTORB;
-  c0:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
-  c4:	85 b9       	out	0x05, r24	; 5
-		PORTD = DC_MOTORD;
-  c6:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <DC_MOTORD>
-  ca:	8b b9       	out	0x0b, r24	; 11
+		PORTB = DC_MOTOR;
+  bc:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+  c0:	85 b9       	out	0x05, r24	; 5
 
-		if((PIND & 0x20) == 0x00)
-  cc:	4d 99       	sbic	0x09, 5	; 9
-  ce:	06 c0       	rjmp	.+12     	; 0xdc <DCMotor+0x4c>
+		if((PIND & 0x80) == 0x00)
+  c2:	4f 99       	sbic	0x09, 7	; 9
+  c4:	09 c0       	rjmp	.+18     	; 0xd8 <DCMotor+0x48>
 		{
-			OCR2A = 150;
-  d0:	86 e9       	ldi	r24, 0x96	; 150
-  d2:	80 93 b3 00 	sts	0x00B3, r24	; 0x8000b3 <__TEXT_REGION_LENGTH__+0x7f80b3>
-			DC_MOTORB = 0x08;
-  d6:	88 e0       	ldi	r24, 0x08	; 8
-  d8:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+			OCR1A = 200;
+  c6:	88 ec       	ldi	r24, 0xC8	; 200
+  c8:	90 e0       	ldi	r25, 0x00	; 0
+  ca:	90 93 89 00 	sts	0x0089, r25	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
+  ce:	80 93 88 00 	sts	0x0088, r24	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
+			DC_MOTOR = 0x03;
+  d2:	83 e0       	ldi	r24, 0x03	; 3
+  d4:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
 		}
 		
 		if((PIND & 0x40) == 0x00)
-  dc:	4e 99       	sbic	0x09, 6	; 9
-  de:	06 c0       	rjmp	.+12     	; 0xec <DCMotor+0x5c>
+  d8:	4e 99       	sbic	0x09, 6	; 9
+  da:	09 c0       	rjmp	.+18     	; 0xee <DCMotor+0x5e>
 		{
-			OCR2B = 150;
-  e0:	86 e9       	ldi	r24, 0x96	; 150
-  e2:	80 93 b4 00 	sts	0x00B4, r24	; 0x8000b4 <__TEXT_REGION_LENGTH__+0x7f80b4>
-			DC_MOTORD = 0x08;
-  e6:	88 e0       	ldi	r24, 0x08	; 8
-  e8:	80 93 01 01 	sts	0x0101, r24	; 0x800101 <DC_MOTORD>
+			OCR1B = 200;
+  dc:	88 ec       	ldi	r24, 0xC8	; 200
+  de:	90 e0       	ldi	r25, 0x00	; 0
+  e0:	90 93 8b 00 	sts	0x008B, r25	; 0x80008b <__TEXT_REGION_LENGTH__+0x7f808b>
+  e4:	80 93 8a 00 	sts	0x008A, r24	; 0x80008a <__TEXT_REGION_LENGTH__+0x7f808a>
+			DC_MOTOR = 0x05;
+  e8:	85 e0       	ldi	r24, 0x05	; 5
+  ea:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
 		}
 		
-		if((PIND & 0x80) == 0x00)
-  ec:	4f 99       	sbic	0x09, 7	; 9
-  ee:	e8 cf       	rjmp	.-48     	; 0xc0 <DCMotor+0x30>
+		if((PIND & 0x20) == 0x00)
+  ee:	4d 99       	sbic	0x09, 5	; 9
+  f0:	e5 cf       	rjmp	.-54     	; 0xbc <DCMotor+0x2c>
 		{
-			DC_MOTORB = 0x00;
-  f0:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
-			DC_MOTORD = 0x00;
-  f4:	10 92 01 01 	sts	0x0101, r1	; 0x800101 <DC_MOTORD>
-			OCR2A = 0;
-  f8:	10 92 b3 00 	sts	0x00B3, r1	; 0x8000b3 <__TEXT_REGION_LENGTH__+0x7f80b3>
-			OCR2B = 0;
-  fc:	10 92 b4 00 	sts	0x00B4, r1	; 0x8000b4 <__TEXT_REGION_LENGTH__+0x7f80b4>
- 100:	df cf       	rjmp	.-66     	; 0xc0 <DCMotor+0x30>
+			DC_MOTOR = 0x00;
+  f2:	10 92 00 01 	sts	0x0100, r1	; 0x800100 <__DATA_REGION_ORIGIN__>
+			OCR1A = 0;
+  f6:	10 92 89 00 	sts	0x0089, r1	; 0x800089 <__TEXT_REGION_LENGTH__+0x7f8089>
+  fa:	10 92 88 00 	sts	0x0088, r1	; 0x800088 <__TEXT_REGION_LENGTH__+0x7f8088>
+			OCR1B = 0;
+  fe:	10 92 8b 00 	sts	0x008B, r1	; 0x80008b <__TEXT_REGION_LENGTH__+0x7f808b>
+ 102:	10 92 8a 00 	sts	0x008A, r1	; 0x80008a <__TEXT_REGION_LENGTH__+0x7f808a>
+ 106:	da cf       	rjmp	.-76     	; 0xbc <DCMotor+0x2c>
 
-00000102 <main>:
+00000108 <main>:
 
 int DCMotor(void);
 
 int main(void)
 {
 	DCMotor();
- 102:	0e 94 48 00 	call	0x90	; 0x90 <DCMotor>
+ 108:	0e 94 48 00 	call	0x90	; 0x90 <DCMotor>
 
-00000106 <_exit>:
- 106:	f8 94       	cli
+0000010c <_exit>:
+ 10c:	f8 94       	cli
 
-00000108 <__stop_program>:
- 108:	ff cf       	rjmp	.-2      	; 0x108 <__stop_program>
+0000010e <__stop_program>:
+ 10e:	ff cf       	rjmp	.-2      	; 0x10e <__stop_program>

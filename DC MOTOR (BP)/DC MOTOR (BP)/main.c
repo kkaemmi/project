@@ -2,8 +2,7 @@
 
 #include <avr/io.h>
 
-char DC_MOTORB;
-char DC_MOTORD;
+char DC_MOTOR;
 
 int DCMotor(void);
 
@@ -17,40 +16,38 @@ int main(void)
 int DCMotor(void)
 {
 	DDRB = 0xFF;
-	DDRD = 0xFF;
+	DDRD = 0x00;
 
 	PORTB = 0x00;
-	PORTD = 0x00;
+	PORTD = 0xE0;
 	
-	TCCR2A |= (1 << WGM21) | (1 << WGM20);
-	TCCR2A |= (1 << COM2A1) | (1 << COM2B1);
-	TCCR2B |= (1 << CS22);
-	DDRB |= (1 << PINB3);
-	DDRD |= (1 << PIND3);
+	TCCR1A |= (1 << WGM11) | (1 << WGM10);
+	TCCR1A |= (1 << COM1A1) | (1 << COM1B1);
+	TCCR1B |= (1 << CS21);
+	
+	DDRB |= (1 << PINB0) | (1 << PINB1) | (1 << PINB2);
 	
 	while(1)
 	{
-		PORTB = DC_MOTORB;
-		PORTD = DC_MOTORD;
+		PORTB = DC_MOTOR;
 
-		if((PIND & 0x20) == 0x00)
+		if((PIND & 0x80) == 0x00)
 		{
-			OCR2A = 150;
-			DC_MOTORB = 0x08;
+			OCR1A = 200;
+			DC_MOTOR = 0x03;
 		}
 		
 		if((PIND & 0x40) == 0x00)
 		{
-			OCR2B = 150;
-			DC_MOTORD = 0x08;
+			OCR1B = 200;
+			DC_MOTOR = 0x05;
 		}
 		
-		if((PIND & 0x80) == 0x00)
+		if((PIND & 0x20) == 0x00)
 		{
-			DC_MOTORB = 0x00;
-			DC_MOTORD = 0x00;
-			OCR2A = 0;
-			OCR2B = 0;
+			DC_MOTOR = 0x00;
+			OCR1A = 0;
+			OCR1B = 0;
 		}
 	}
 	return 0;
