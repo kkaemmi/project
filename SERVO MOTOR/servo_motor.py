@@ -12,9 +12,9 @@ class MG90_96R_Class:
         # 주파수를 60[Hz]로 설정
         self.Pwm.set_pwm_freq(60)
 
-# # 최소 및 최대 서보 펄스 길이 구성
-# servo_min    = 150 # 최소 펄스 길이
-# servo_max    = 650 # 최대 펄스 길이
+# 최소 및 최대 서보 펄스 길이 구성
+# 150 최소 펄스 길이
+# 650 최대 펄스 길이
     def SetPos(self, pos):
         pulse = (650 - 150) * pos / 180 + 150 + self.servo_offset
         self.Pwm.set_pwm(self.servo_num, 0, int(pulse))
