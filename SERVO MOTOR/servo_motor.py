@@ -19,10 +19,6 @@ class MG90_96R_Class:
         pulse = (650 - 150) * pos / 180 + 150 + self.servo_offset
         self.Pwm.set_pwm(self.servo_num, 0, int(pulse))
 
-    def Cleanup(self):
-        self.SetPos(90)
-        time.sleep(1)
-
 if __name__ == '__main__':
     Servo0 = MG90_96R_Class(Channel = 0, ZeroOffset = -10)
     Servo1 = MG90_96R_Class(Channel = 1, ZeroOffset = -10)
@@ -84,12 +80,5 @@ if __name__ == '__main__':
         print(str(e))
 
     finally:
-        Servo0.Cleanup()
-        Servo1.Cleanup()
-        Servo2.Cleanup()
-        Servo3.Cleanup()
-        Servo4.Cleanup()
-        Servo5.Cleanup()
-        Servo6.Cleanup()
         print("exit profram")
         
