@@ -35,21 +35,21 @@ int DCMotor(void)
 		
 		motor__init__();
 
-		if (data == 'q')
+		if (data == 'z')
 		{
 			OCR1A = 200;
 			OCR1B = 0;
 
 			DC_MOTOR = 0x03; // 0000 0011
 		}
-		else if (data == 'w')
+		else if (data == 'x')
 		{
 			OCR1A = 0;
 			OCR1B = 200;
 
 			DC_MOTOR = 0x05; // 0000 0101
 		}
-		else if (data == 'e')
+		else if (data == 'c')
 		{
 			OCR1A = 0;
 			OCR1A = 0;
